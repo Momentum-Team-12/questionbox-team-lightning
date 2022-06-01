@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import environ
 import os
+import django_on_heroku
+
 
 
 
@@ -142,6 +144,9 @@ INTERNAL_IPS = [
 ]
 
 AUTH_USER_MODEL = "api.User"
+
+django_on_heroku.settings(locals())
+del DATABASES['default']['OPTIONS']['sslmode']
 
 
 REST_FRAMEWORK = {
