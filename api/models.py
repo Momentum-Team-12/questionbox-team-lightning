@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
 class User(AbstractUser):
    
     def __str__(self):
@@ -27,15 +26,11 @@ class Answer(models.Model):
 
 
 class Accepted(models.Model):
-    response = models.ForeignKey('Answer', related_name='accepteds',on_delete=models.CASCADE)
-    #foreign key = user.pk
-    user = models.ForeignKey('User', related_name= 'accepteds', on_delete=models.CASCADE)
-
-
+    response    = models.ForeignKey('Answer', related_name='accepteds',on_delete=models.CASCADE)
+    user        = models.ForeignKey('User', related_name= 'accepteds', on_delete=models.CASCADE)
 
 
 
 class Favorite(models.Model):
-    question = models.ForeignKey('Question', related_name='favorites',on_delete=models.CASCADE)
-    #foreign key = user.pk
-    user = models.ForeignKey('User', related_name= 'favorites', on_delete=models.CASCADE)
+    question    = models.ForeignKey('Question', related_name='favorites',on_delete=models.CASCADE)
+    user        = models.ForeignKey('User', related_name= 'favorites', on_delete=models.CASCADE)
