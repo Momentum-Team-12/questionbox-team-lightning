@@ -12,7 +12,7 @@ class QuestionViewSet(ModelViewSet):
     serializer_class  = QuestionSerializer
 
     def get_serializer_class(self):
-        if self.action in ['list','favorite']:
+        if self.action in ['list',]:
             return ListQuestionSerializer
         return super().get_serializer_class()
 
@@ -20,8 +20,4 @@ class QuestionViewSet(ModelViewSet):
         if self.request.user  == instance.user:
             instance.delete()
     
-    @action(detail=False, methods=["get"])
-    def favorite(self,request):
-        questions   = self.get_queryset().filter(favorite=True)
-        serializer  = self.get_serializer(questions, many =True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+   
