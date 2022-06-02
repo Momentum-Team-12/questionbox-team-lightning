@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.forms import BooleanField
 
 
 class User(AbstractUser):
@@ -14,7 +13,7 @@ class Question(models.Model):
     creator     = models.ForeignKey('User', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
     favorite   = models.BooleanField(default=False)
-    
+
     def __str__ (self):
         return self.name
 

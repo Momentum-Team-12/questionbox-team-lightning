@@ -1,13 +1,14 @@
 from django.shortcuts import render
-from .models import Question
-from .serializers import QuestionSerializer, ListQuestionSerializer
-from rest_framework import ModelViewSet, status
+from api.models import Question
+from api.serializers import QuestionSerializer, ListQuestionSerializer
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status
 
 
 class QuestionViewSet(ModelViewSet):
-    queryset          = Question.objects.all
+    queryset          = Question.objects.all()
     serializer_class  = QuestionSerializer
 
     def get_serializer_class(self):
@@ -21,6 +22,6 @@ class QuestionViewSet(ModelViewSet):
     
     @action(detail=False, methods=["get"])
     def favorite(self,request):
-        questions   = self.get_queryeset().filter(favorite=True)
-        serializer  = self.getserializer(questions, many =True)
+        questions   = self.get_queryset().filter(favorite=True)
+        serializer  = self.get_serializer(questions, many =True)
         return Response(serializer.data, status=status.HTTP_200_OK)
