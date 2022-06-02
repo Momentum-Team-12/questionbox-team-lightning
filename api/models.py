@@ -14,6 +14,8 @@ class Question(models.Model):
     created_at  = models.DateTimeField(auto_now_add=True)
     favorite    = models.ForeignKey('Favorite', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
 
+
+
     def __str__ (self):
         return self.name
 
