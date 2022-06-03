@@ -15,18 +15,20 @@ class Question(models.Model):
     created_at  = models.DateField(auto_now_add=True)
     favorite    = models.ForeignKey('Favorite', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
 
-
-
     def __str__ (self):
         return self.name
 
 
 class Answer(models.Model):
-    response   = models.TextField(null=True, blank=True)
-    responder  = models.ForeignKey('User', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
-    question   = models.ForeignKey('Question', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
+    response   = models.TextField(max_length=300)
+    responder  = models.ForeignKey('User', related_name='responders', on_delete=models.CASCADE, null=True,blank=True)
+    question   = models.ForeignKey('Question', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
+    accepted   = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
+
+    def __str__ (self):
+        return self.response 
 
 
 
