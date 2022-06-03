@@ -3,8 +3,8 @@ from .models import Answer, Question
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-    responder = serializers.SlugRelatedField(read_only=True, slug_field='responder')
-    question  = serializers.SlugRelatedField(read_only=True, slug_field='question')
+    responder = serializers.SlugRelatedField(read_only=True, slug_field='username')
+    question  = serializers.SlugRelatedField(read_only=True, slug_field='description')
     class Meta:
         model = Answer
         fields = ('__all__')
