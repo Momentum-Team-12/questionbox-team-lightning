@@ -20,9 +20,9 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    response   = models.TextField(max_length=300)
+    response   = models.TextField(max_length=300, null=True, blank=True)
     responder  = models.ForeignKey('User', related_name='responders', on_delete=models.CASCADE, null=True,blank=True)
-    question   = models.ForeignKey('Question', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
+    question   = models.ForeignKey('Question', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
     accepted   = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
