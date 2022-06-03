@@ -51,5 +51,11 @@ class AnswerListCreateView(ListCreateAPIView):
         return Answer.objects.filter(question_id=self.kwargs["question_pk"])
 
     def perform_create(self, serializer, **kwargs):
-        book = get_object_or_404(Answer, pk=self.kwargs["question_pk"])
+        question = get_object_or_404(Answer, pk=self.kwargs["question_pk"])
         serializer.save(answered_by=self.request.user, question=question)
+
+    @action(detail=False)
+    def accepted(self, request):
+        accepted_answer = Answer.objects.filter(featured=True)
+        serializer = self.get_serializer(accepted_answer, many=True)
+        return Response(serializer.data)
