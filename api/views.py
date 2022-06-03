@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from api.models import Question
 from api.serializers import QuestionSerializer, ListQuestionSerializer
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
+
+from django.db.models import Count
 
 
 class QuestionViewSet(ModelViewSet):
@@ -19,5 +17,10 @@ class QuestionViewSet(ModelViewSet):
     def perform_destroy(self, instance):
         if self.request.user  == instance.user:
             instance.delete()
+
+    def get_queryset(self):
+        return Question.objects.annotate(
+            total_answers=Count('answers'),    
+        )
     
    
