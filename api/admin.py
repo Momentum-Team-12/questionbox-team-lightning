@@ -1,5 +1,10 @@
 from django.contrib import admin
-from api.models import Answer
+from api.models import  Question, Answer
+
 # Register your models here.
 
+admin.site.register(Question)
 admin.site.register(Answer)
+
+
+

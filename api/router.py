@@ -1,7 +1,5 @@
-from api.views import AnswerView
+from api.views import QuestionViewSet
 from rest_framework import routers
 
-
 router = routers.DefaultRouter()
-
-router.register('answer', AnswerView)
+router.register('questions',QuestionViewSet)
