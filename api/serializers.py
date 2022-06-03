@@ -2,16 +2,17 @@ from rest_framework import serializers
 from api.models import Question
 
 class QuestionSerializer(serializers.ModelSerializer):
-    
+    creator        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    total_answers  = serializers.IntegerField()
     class Meta:
         model  = Question
-        fields = ['id','name','description','creator','created_at', ]
+        fields = ['id','name','description','creator','created_at','total_answers' ]
 
 class ListQuestionSerializer(serializers.ModelSerializer):
-    
+    creator = serializers.SlugRelatedField(read_only=True, slug_field="username")
     class Meta:
         model  = Question
-        fields = ['id','name','creator', 'description','created_at']
+        fields = ['id','name','creator','name','description','created_at']
 
 
 
