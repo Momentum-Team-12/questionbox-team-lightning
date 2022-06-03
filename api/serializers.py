@@ -16,4 +16,4 @@ class ListQuestionSerializer(serializers.ModelSerializer):
 
 
 
-        #use slug related field
+        
