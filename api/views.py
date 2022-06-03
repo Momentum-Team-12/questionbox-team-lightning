@@ -6,6 +6,8 @@ from rest_framework.permissions import SAFE_METHODS, BasePermission
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
+from django.db.models import Count
 
 
 # # Create your views here.
@@ -22,6 +24,11 @@ class QuestionViewSet(ModelViewSet):
     def perform_destroy(self, instance):
         if self.request.user  == instance.user:
             instance.delete()
+
+    def get_queryset(self):
+        return Question.objects.annotate(
+            total_answers=Count('answers'),    
+        )
     
 
 
