@@ -71,4 +71,4 @@ class UserAnswerListView(ListAPIView):
     serializer_class=AnswerSerializer
 
     def get_queryset(self):
-        return self.request.user.answer_user.all()
+        return self.request.user
