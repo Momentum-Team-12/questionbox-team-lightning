@@ -12,7 +12,7 @@ class Question(models.Model):
     name        = models.CharField(max_length=300, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     creator     = models.ForeignKey('User', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
-    created_at  = models.DateField(auto_now_add=True)
+    created_at  = models.DatetimeField(auto_now_add=True)
     favorite    = models.ForeignKey('Favorite', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__ (self):
