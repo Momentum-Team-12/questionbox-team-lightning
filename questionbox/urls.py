@@ -30,4 +30,5 @@ urlpatterns = [
         api_views.AnswerListCreateView.as_view(),
         name="question_answers",
     ),
+    path('api/user/<int:responder_pk>/answers', api_views.UserAnswerListView.as_view(), name="user_answers")
 ]
