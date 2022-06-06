@@ -4,7 +4,8 @@ from .models import Answer, Question
 
 class AnswerSerializer(serializers.ModelSerializer):
     responder = serializers.SlugRelatedField(read_only=True, slug_field='username')
-    question  = serializers.SlugRelatedField(read_only=True, slug_field='question')
+    question  = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    
     class Meta:
         model = Answer
         fields = ('__all__')
@@ -24,4 +25,4 @@ class ListQuestionSerializer(serializers.ModelSerializer):
 
 
 
-        #use slug related field
+        

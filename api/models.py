@@ -19,9 +19,10 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+
     response   = models.TextField()
     responder  = models.ForeignKey('User', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
-    question    = models.ForeignKey('Question', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
+    question    = models.ForeignKey('Question', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)   
     accepted   = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
