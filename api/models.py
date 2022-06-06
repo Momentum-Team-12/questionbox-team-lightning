@@ -41,3 +41,8 @@ class Accepted(models.Model):
 class Favorite(models.Model):
     question    = models.ForeignKey('Question', related_name='favorites',on_delete=models.CASCADE)
     user        = models.ForeignKey('User', related_name= 'favorites', on_delete=models.CASCADE)
+
+    class Meta:
+            constraints  = [
+                models.UniqueConstraint(fields =['question','user'], name='unique_favorite')
+            ]
