@@ -16,6 +16,18 @@ class QuestionViewSet(ModelViewSet):
     queryset          = Question.objects.all()
     serializer_class  = QuestionSerializer
 
+    def get_queryset(self):
+        #if there are query perams and there is a key for search use that search term to
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+        #search for the query search. if none then use super
+            results = Question.objects.filter(name__icontains=self.request.query_params.get("search"))
+        else:
+            results = Question.objects.annotate(
+                total_answers=Count('answers')
+            )
+        return results
+
     def get_serializer_class(self):
         if self.action in ['list',]:
             return ListQuestionSerializer
@@ -26,13 +38,11 @@ class QuestionViewSet(ModelViewSet):
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user is serializer.instance.creator:
+        if self.request.user == serializer.instance.creator:
             serializer.save()
+            print("***************************")
 
-    def get_queryset(self):
-        return Question.objects.annotate(
-            total_answers=Count('answers'),    
-        )
+    
     
 
 
