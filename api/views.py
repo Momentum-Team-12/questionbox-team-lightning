@@ -72,4 +72,12 @@ class UserAnswerListView(ListAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
-        return Answer.objects.filter(responder_id=self.kwargs["responder_pk"])
+        return Answer.objects.filter(responder_id=self.kwargs[""])
+
+
+class UserQuestionListView(ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = ListQuestionSerializer
+
+    def get_queryset(self):
+        return Question.objects.filter(creator_id=self.kwargs["creator_pk"])
