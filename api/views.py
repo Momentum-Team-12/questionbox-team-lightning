@@ -1,7 +1,7 @@
 from api.models import Question, Answer
 from api.serializers import QuestionSerializer, ListQuestionSerializer, AnswerSerializer
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListCreateAPIView, get_object_or_404
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -29,6 +29,16 @@ class QuestionViewSet(ModelViewSet):
         return Question.objects.annotate(
             total_answers=Count('answers'),    
         )
+    
+
+class UserQuestionView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ListQuestionSerializer
+
+    def get_queryset(self):
+        return Question.objects.filter(creator=self.request.user.pk)
+        
+    
+    
     
 
 
@@ -66,3 +76,6 @@ class AnswerListCreateView(ListCreateAPIView):
         accepted_answer = Answer.objects.filter(featured=True)
         serializer = self.get_serializer(accepted_answer, many=True)
         return Response(serializer.data)
+
+
+
