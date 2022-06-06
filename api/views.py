@@ -40,7 +40,7 @@ class QuestionViewSet(ModelViewSet):
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.creator:
             serializer.save()
-            print("***************************")
+            
 
     
     
