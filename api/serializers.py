@@ -28,5 +28,5 @@ class QuestionFavoriteSerializer(serializers.ModelSerializer):
     
     class Meta:
         model   = Favorite
-        fields  = ['user','question','questions']
+        fields  = ['user','question',]
         
