@@ -22,8 +22,11 @@ class QuestionViewSet(ModelViewSet):
         return super().get_serializer_class()
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.user:
+        if self.request.user  == instance.creator:
             instance.delete()
+
+    def perform_update(self,serializer):
+        serializer.save(creator=self.request.user)
 
     def get_queryset(self):
         return Question.objects.annotate(
