@@ -68,7 +68,8 @@ class AnswerListCreateView(ListCreateAPIView):
         return Response(serializer.data)
 
 class UserAnswerListView(ListAPIView):
-    serializer_class=AnswerSerializer
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(responder=self.request.user)
+        return Answer.objects.filter(responder_id=self.kwargs["responder_pk"])
