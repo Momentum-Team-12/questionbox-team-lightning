@@ -22,6 +22,7 @@ class QuestionViewSet(ModelViewSet):
         if search_term is not None:
         #search for the query search. if none then use super
             results = Question.objects.filter(name__icontains=self.request.query_params.get("search"))
+        
         else:
             results = Question.objects.annotate(
                 total_answers=Count('answers')
