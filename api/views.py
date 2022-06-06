@@ -1,7 +1,7 @@
-from api.models import Question, Answer
-from api.serializers import QuestionSerializer, ListQuestionSerializer, AnswerSerializer
+from api.models import Question, Answer, Favorite
+from api.serializers import QuestionSerializer, ListQuestionSerializer, AnswerSerializer,ListFavoriteSerializer
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListCreateAPIView, ListAPIView, get_object_or_404
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -72,7 +72,7 @@ class UserAnswerListView(ListAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
-        return Answer.objects.filter(responder_id=self.kwargs[""])
+        return Answer.objects.filter(responder_id=self.kwargs["responder_pk"])
 
 
 class UserQuestionListView(ListAPIView):
@@ -81,3 +81,11 @@ class UserQuestionListView(ListAPIView):
 
     def get_queryset(self):
         return Question.objects.filter(creator_id=self.kwargs["creator_pk"])
+
+
+class UserFavoriteListView(ListAPIView):
+    queryset = Favorite.objects.all()
+    serializer_class = ListFavoriteSerializer
+    
+    def get_queryset(self):
+        return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
