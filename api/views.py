@@ -26,7 +26,8 @@ class QuestionViewSet(ModelViewSet):
             instance.delete()
 
     def perform_update(self,serializer):
-        serializer.save(creator=self.request.user)
+        if self.request.user is serializer.instance.creator:
+            serializer.save()
 
     def get_queryset(self):
         return Question.objects.annotate(
