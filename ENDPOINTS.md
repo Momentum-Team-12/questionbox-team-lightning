@@ -1,5 +1,5 @@
 
-**# LOGIN**
+ # LOGIN
 
 **### Request**
 
@@ -33,12 +33,10 @@ HTTP_204_NO_CONTENT
 
 
 
-### QUESTION ENDPOINTS
+# QUESTION ENDPOINTS
 
 ## Request 
 GET /questions/
-
-
 
 ## Request
 GET /questions/<int:pk>/
@@ -59,3 +57,25 @@ PATCH /questions/<int:pk>/
 
 ## Request
 DELETE /questions/<int:pk>/
+
+
+
+
+# Answer Endpoints
+## Request
+POST api/questions/<int:question_pk>/answers
+
+## Request
+POST api/user/<int:responder_pk>/answers
+
+
+# User Endpoints
+
+## Request
+GET api/user/<int:creator_pk>/questions
+
+## Request
+GET api/user/<int:user_pk>/favorites
+
+
+
