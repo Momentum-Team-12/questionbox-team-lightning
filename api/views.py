@@ -37,7 +37,9 @@ class QuestionViewSet(ModelViewSet):
             
 
     
-    
+# I want to empliment a way to search the list of answers for a specific answer query. Joey_notes
+# Can I follow the logic that was used to empliment the search query for QuestionViewSet? Joey_notes
+#   
 
 
 # #permission code from viewset tutorial - https://www.youtube.com/watch?v=dCbfOZurCQk
@@ -75,12 +77,23 @@ class AnswerListCreateView(ListCreateAPIView):
         serializer = self.get_serializer(accepted_answer, many=True)
         return Response(serializer.data)
 
+    def get_queryset(self):
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            results = Answer.objects.filter(response__icontains=self.request.query_params.get("search"))
+        else:
+            results = Answer.objects.annotate(
+                total_answers=Count('response')
+            )
+        return results
 class UserAnswerListView(ListAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
         return Answer.objects.filter(responder_id=self.kwargs["responder_pk"])
+    
+
 
 class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
@@ -94,7 +107,8 @@ class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
         serializer.save(user=self.request.user)
 
 
-class UserQuestionListView(ListAPIView):
+
+class UserQuestionListView(ListAPIView): 
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
