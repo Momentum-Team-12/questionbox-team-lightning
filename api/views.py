@@ -2,7 +2,7 @@ from api.models import Question, Answer, Favorite
 from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
-from rest_framework.permissions import SAFE_METHODS, BasePermission
+from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
 from .permissions import IsResponderOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -125,5 +125,13 @@ class UserFavoriteListView(ListAPIView):
         return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
 
 
+class FavoriteView(models.ListcreateAPIView):
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self,serializer,**kwargs):
+        user= self.request.user
+        question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
+        user.favorite_question.add(question)
 
 

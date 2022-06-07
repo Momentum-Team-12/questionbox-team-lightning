@@ -13,6 +13,7 @@ class Question(models.Model):
     creator     = models.ForeignKey('User', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
     favorite    = models.ForeignKey('Favorite', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
+    favorited_by = models.ManyToManyField(User,related_name='favorite_questions')
 
     def __str__ (self):
         return self.title
