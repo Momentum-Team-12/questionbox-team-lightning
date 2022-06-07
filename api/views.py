@@ -19,7 +19,7 @@ class QuestionViewSet(ModelViewSet):
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = Question.objects.filter(name__icontains=self.request.query_params.get("search"))
+            results = Question.objects.filter(title__icontains=self.request.query_params.get("search"))
         else:
             results = Question.objects.annotate(
                 total_answers=Count('answers')
