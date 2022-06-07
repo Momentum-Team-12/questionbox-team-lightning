@@ -125,9 +125,10 @@ class UserFavoriteListView(ListAPIView):
         return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
 
 
-class FavoriteView(models.ListcreateAPIView):
+class FavoriteView(ListCreateAPIView):
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
+    queryset = Question.objects.all()
 
     def perform_create(self,serializer,**kwargs):
         user= self.request.user
@@ -135,3 +136,11 @@ class FavoriteView(models.ListcreateAPIView):
         user.favorite_question.add(question)
 
 
+    def get_queryset(self):
+        return self.request.user.favorite_questions.all()
+
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return QuestionSerializer
+        return super().get_serializer_class()
