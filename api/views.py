@@ -3,6 +3,7 @@ from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,Answe
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, BasePermission
+from .permissions import IsResponderOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
@@ -72,7 +73,7 @@ class AnswerListCreateView(ListCreateAPIView):
 
     @action(detail=False)
     def accepted(self, request):
-        accepted_answer = Answer.objects.filter(featured=True)
+        accepted_answer = Answer.objects.filter(accepted=True)
         serializer = self.get_serializer(accepted_answer, many=True)
         return Response(serializer.data)
 
@@ -92,6 +93,20 @@ class UserAnswerListView(ListAPIView):
     def get_queryset(self):
         return Answer.objects.filter(responder_id=self.kwargs["responder_pk"])
     
+
+
+class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permission_classes = [IsResponderOrReadOnly]
+
+    def get_queryset(self):
+        return Answer.objects.filter(question_id=self.kwargs["question_pk"], answer_id=self.kwargs["answer_pk"])
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 
 class UserQuestionListView(ListAPIView): 
     queryset = Question.objects.all()
