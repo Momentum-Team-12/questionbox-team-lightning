@@ -1,5 +1,5 @@
 from api.models import Question, Answer, Favorite
-from api.serializers import QuestionFavoriteSerializer, QuestionSerializer, ListQuestionSerializer, AnswerSerializer,QuestionFavoriteSerializer
+from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, BasePermission
@@ -16,23 +16,26 @@ class QuestionViewSet(ModelViewSet):
     queryset          = Question.objects.all()
     serializer_class  = QuestionSerializer
 
-    def get_serializer_class(self):
-        if self.action in ['list',]:
-            return ListQuestionSerializer
-        return super().get_serializer_class()
+    def get_queryset(self):
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            results = Question.objects.filter(title__icontains=self.request.query_params.get("search"))
+        else:
+            results = Question.objects.annotate(
+                total_answers=Count('answers')
+            )
+        return results
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.creator:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user is serializer.instance.creator:
+        if self.request.user == serializer.instance.creator:
             serializer.save()
+            
 
-    def get_queryset(self):
-        return Question.objects.annotate(
-            total_answers=Count('answers'),    
-        )
+    
     
 
 
@@ -81,7 +84,7 @@ class UserAnswerListView(ListAPIView):
 
 class UserQuestionListView(ListAPIView):
     queryset = Question.objects.all()
-    serializer_class = ListQuestionSerializer
+    serializer_class = QuestionSerializer
 
     def get_queryset(self):
         return Question.objects.filter(creator_id=self.kwargs["creator_pk"])

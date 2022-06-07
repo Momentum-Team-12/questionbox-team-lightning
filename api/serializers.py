@@ -4,7 +4,7 @@ from .models import Answer, Question, Favorite
 
 class AnswerSerializer(serializers.ModelSerializer):
     responder = serializers.SlugRelatedField(read_only=True, slug_field='username')
-    question  = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    question  = serializers.SlugRelatedField(read_only=True, slug_field='title')
     
     class Meta:
         model = Answer
@@ -12,24 +12,24 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     creator        = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    total_answers  = serializers.IntegerField()
-    class Meta:
-        model  = Question
-        fields = ['id','name','description','creator','created_at','total_answers' ]
+    total_answers  = serializers.IntegerField(read_only=True,)
+    answers        = serializers.PrimaryKeyRelatedField(many=True, queryset=Answer.objects.all())
+   
 
-class ListQuestionSerializer(serializers.ModelSerializer):
-    creator = serializers.SlugRelatedField(read_only=True, slug_field="username")
     class Meta:
         model  = Question
-        fields = ['id','name','creator','name','description','created_at']
+        fields = ['id','title','body','creator','created_at','answers','total_answers' ]
 
 
 class QuestionFavoriteSerializer(serializers.ModelSerializer):
     user     = serializers.SlugRelatedField(read_only=True,slug_field="username")
-    question = serializers.SlugRelatedField(read_only =True, slug_field="name")
+    question = serializers.SlugRelatedField(read_only =True, slug_field="title")
 
     
     class Meta:
         model   = Favorite
-        fields  = ['user','question','questions']
+        fields  = ['user','question']
+
+        
+
         
