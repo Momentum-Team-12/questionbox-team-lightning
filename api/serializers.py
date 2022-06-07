@@ -16,7 +16,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     answers = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
-        view_name='question-detail'
+        view_name='answer-edit'
     )
    
 
