@@ -107,3 +107,7 @@ class UserFavoriteListView(ListAPIView):
     
     def get_queryset(self):
         return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
+
+
+
+
