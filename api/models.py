@@ -15,7 +15,7 @@ class Question(models.Model):
     favorite    = models.ForeignKey('Favorite', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__ (self):
-        return self.name
+        return self.title
 
 
 class Answer(models.Model):
