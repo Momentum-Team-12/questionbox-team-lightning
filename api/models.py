@@ -8,12 +8,13 @@ class User(AbstractUser):
         return self.username
 
 class Question(models.Model):
-    title        = models.CharField(max_length=300, null=True, blank=True)
-    body = models.TextField(null=True, blank=True)
+    title       = models.CharField(max_length=300, null=True, blank=True)
+    body        = models.TextField(null=True, blank=True)
     creator     = models.ForeignKey('User', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
     favorite    = models.ForeignKey('Favorite', related_name='questions', on_delete=models.CASCADE, null=True,blank=True)
     favorited_by = models.ManyToManyField(User,related_name='favorite_questions', blank=True)
+    modified_on = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__ (self):
         return self.title
