@@ -12,6 +12,6 @@ class IsResponderOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if obj.Responder is request.user:
+        if obj.responder is request.user:
             return True
         return False

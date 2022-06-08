@@ -1,15 +1,14 @@
 from api.models import Question, Answer, Favorite
 from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
-from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
+from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from .permissions import IsResponderOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Count
-
+from rest_framework.views import APIView
 
 # # Create your views here.
 
@@ -124,22 +123,13 @@ class UserFavoriteListView(ListAPIView):
         return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
 
 
-class FavoriteView(ListCreateAPIView):
-    serializer_class = QuestionSerializer
+class CreateFavoriteView(APIView):
     permission_classes = [IsAuthenticated]
-    queryset = Question.objects.all()
 
-    def perform_create(self,serializer,**kwargs):
-        user= self.request.user
+    def post(self, request, **kwargs):
+        
+        user     = self.request.user
         question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
-        user.favorite_question.add(question)
-
-
-    def get_queryset(self):
-        return self.request.user.favorite_questions.all()
-
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return QuestionSerializer
-        return super().get_serializer_class()
+        user.favorite_questions.add(question)
+        serializer = QuestionSerializer(QuestionSerializer, context={"request": request})
+        return Response(serializer.data, status=201)

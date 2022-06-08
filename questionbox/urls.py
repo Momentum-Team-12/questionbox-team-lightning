@@ -34,5 +34,5 @@ urlpatterns = [
     path('api/user/<int:creator_pk>/questions', api_views.UserQuestionListView.as_view(), name="user_questions"),
     path('api/user/<int:responder_pk>/answers', api_views.UserAnswerListView.as_view(), name="user_answers"),
     path('api/user/<int:user_pk>/favorites', api_views.UserFavoriteListView.as_view(), name="user_favorites"),
-    path('api/questions/<int:question_pk>/favorites', api_views.FavoriteView.as_view(), name ="favorite_view")
+    path('api/questions/<int:question_pk>/favorites', api_views.CreateFavoriteView.as_view(), name ="favorite_questions")
 ]
