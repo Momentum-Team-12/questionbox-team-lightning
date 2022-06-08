@@ -19,6 +19,8 @@ class Question(models.Model):
     def __str__ (self):
         return self.title
 
+    def favorite_count(self):
+        return self.favorited_by.count()
 
 class Answer(models.Model):
 
