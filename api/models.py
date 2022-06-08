@@ -23,7 +23,8 @@ class Answer(models.Model):
 
     response    = models.TextField()
     responder   = models.ForeignKey('User', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
-    question    = models.ForeignKey('Question', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)   
+    question    = models.ForeignKey('Question', related_name='answers', on_delete=models.CASCADE, null=True,blank=True)
+    answer_accepter = models.ForeignKey('User', related_name='answer', on_delete=models.CASCADE, null=True,blank=True)    
     accepted    = models.BooleanField(default=False)
     created_at  = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True, null=True, blank=True)
