@@ -61,8 +61,7 @@ class QuestionViewSet(ModelViewSet):
 
 class AnswerListCreateView(ListCreateAPIView):
     serializer_class = AnswerSerializer
-    # permission_classes = [IsResponderOrReadOnly]
-    #Amy provided a custom permissions file in her api that has classes for different permissions she created, I am thinking we will need this file or atleast the class for "IsReviewerOrReadOnly"
+
 
     def get_queryset(self):
         return Answer.objects.filter(question_id=self.kwargs["question_pk"])
@@ -102,7 +101,7 @@ class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsResponderOrReadOnly]
 
     def get_queryset(self):
-        return Answer.objects.filter(question_id=self.kwargs["question_pk"], answer_id=self.kwargs["answer_pk"])
+        return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
