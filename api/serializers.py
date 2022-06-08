@@ -19,7 +19,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = Question
-        fields = ['id','title','body','creator','created_at','answers','total_answers','favorited_by','modified_on' ]
+        fields = ['id','title','body','creator','created_at','answers','total_answers','favorited_by','modified_on']
 
 
 class QuestionFavoriteSerializer(serializers.ModelSerializer):
