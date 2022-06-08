@@ -2,7 +2,6 @@ from rest_framework import permissions
 
 
 class IsResponderOrReadOnly(permissions.BasePermission):
-    message = 'Editing posts is restricted to the author only.'
 
     def has_permission(self, request, view):
         if request.user.is_authenticated:
@@ -10,9 +9,10 @@ class IsResponderOrReadOnly(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
+        breakpoint()
         if request.method in permissions.SAFE_METHODS:
             return True
-        if obj.Responder is request.user:
+        if obj.responder is request.user:
             return True
         return False
 
@@ -28,6 +28,6 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if obj.answer_accepter is request.user:
+        if obj.question.creator is request.user:
             return True
         return False

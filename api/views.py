@@ -89,29 +89,42 @@ class AnswerListCreateView(ListCreateAPIView):
     #     return results
 
 
-class AnswerAcceptView(RetrieveUpdateAPIView, UpdateModelMixin):
+
+class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+    permission_classes = [IsResponderOrReadOnly]
+
+
+    def perform_update(self, serializer):
+        breakpoint()
+        serializer.save(user=self.request.user, response=s)
+
+
+
+class AnswerAcceptView(RetrieveUpdateAPIView):
     permission_classes = [IsCreatorOrReadOnly]
 
-    def get_queryset(self):
-        return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
+    # def get_queryset(self):
+    #     return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
 
 # CDRF?
     # def partial_update(self, request, *args, **kwargs):
     #     kwargs['partial'] = True
     #     return self.update(request, *args, **kwargs)
 
-    def UpdateAcceptedValue(request, accepted_id):
-        if request.method == 'PATCH':
-            try:
-                answer = Answer.objects.get(pk=accepted_id)
-                answer.accepted = True
-                answer.save()
-                return HttpResponse('', status=200)
-            except Exception:
-                return HttpResponse('Internal Error', status=500)
-        return HttpResponse('Method not allowed', status=405)
+    # def UpdateAcceptedValue(request, accepted_id):
+    #     if request.method == 'PATCH':
+    #         try:
+    #             answer = Answer.objects.get(pk=accepted_id)
+    #             answer.accepted = True
+    #             answer.save()
+    #             return HttpResponse('', status=200)
+    #         except Exception:
+    #             return HttpResponse('Internal Error', status=500)
+    #     return HttpResponse('Method not allowed', status=405)
+
+
 
 
 
@@ -122,18 +135,6 @@ class UserAnswerListView(ListAPIView):
     def get_queryset(self):
         return Answer.objects.filter(responder_id=self.kwargs["responder_pk"])
     
-
-
-class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    permission_classes = [IsResponderOrReadOnly]
-
-    def get_queryset(self):
-        return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
-
-    def perform_update(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 
