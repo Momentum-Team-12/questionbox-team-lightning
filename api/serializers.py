@@ -13,7 +13,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     creator        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     total_answers  = serializers.IntegerField(read_only=True,)
-    
+    answers     = serializers.PrimaryKeyRelatedField(read_only =True)
     class Meta:
         model  = Question
         fields = ['id','title','body','creator','created_at','answers','total_answers','modified_on','favorite_count']
