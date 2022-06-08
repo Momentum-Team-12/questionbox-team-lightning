@@ -2,6 +2,8 @@ from rest_framework import permissions
 
 
 class IsResponderOrReadOnly(permissions.BasePermission):
+    message = 'Editing posts is restricted to the author only.'
+
     def has_permission(self, request, view):
         if request.user.is_authenticated:
             return True
