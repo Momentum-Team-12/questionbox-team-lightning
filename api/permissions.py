@@ -25,6 +25,7 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
+
         if request.method in permissions.SAFE_METHODS:
             return True
         if obj.question.creator is request.user:

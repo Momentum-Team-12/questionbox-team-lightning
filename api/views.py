@@ -99,7 +99,7 @@ class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
 class AnswerAcceptView(RetrieveUpdateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerAcceptSerializer
-    # permission_classes = [IsCreatorOrReadOnly]
+    permission_classes = [IsCreatorOrReadOnly]
 
     def get_queryset(self):
         return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
