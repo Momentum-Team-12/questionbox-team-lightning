@@ -33,7 +33,6 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
         return False
 
 
-
 class IsUserOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):

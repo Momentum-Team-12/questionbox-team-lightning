@@ -1,12 +1,10 @@
 from api.models import MyList, Question, Answer, MyList, User
-from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer,AnswerAcceptSerialize
+from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer,AnswerAcceptSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView, get_object_or_404
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticatedOrReadOnly, IsAuthenticated
-from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly
-
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly, IsUserOrReadOnly
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from django.db.models import Count
 from rest_framework.views import APIView
 
