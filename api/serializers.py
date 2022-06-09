@@ -31,9 +31,14 @@ class MyListSerializer(serializers.ModelSerializer):
 
 
 
-        
 
-        
+class AnswerAcceptSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Answer
+        fields = ['accepted']
+        read_only_fields = ['response', 'responder', 'question', 'id' ]
+
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -47,3 +52,4 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Question
         fields = ['id','title','body','creator','created_at','total_answers','modified_on','favorite_count',]
+

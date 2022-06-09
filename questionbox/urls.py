@@ -32,7 +32,7 @@ urlpatterns = [
         name="question_answers",
     ),
     path("api/questions/<int:question_pk>/answers/<int:pk>", api_views.AnswerDetailEditView.as_view(), name="answer_edit"),
-    # path("api/questions/<int:question_pk>/answers/<int:pk>/accept", api_views.AnswerAcceptView.as_view(), name="accept_answer"),
+    path("api/questions/<int:question_pk>/answers/<int:pk>/accept", api_views.AnswerAcceptView.as_view(), name="accept_answer"),
     path('api/user/<int:creator_pk>/questions', api_views.UserQuestionListView.as_view(), name="user_questions"),
     path('api/user/<int:responder_pk>/answers', api_views.UserAnswerListView.as_view(), name="user_answers"),
     path('api/questions/<int:question_pk>/favorites', api_views.CreateFavoriteView.as_view(), name ="create_favorites"),
