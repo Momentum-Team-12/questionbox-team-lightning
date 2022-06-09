@@ -5,10 +5,12 @@ from .models import Answer, Question, MyList, User
 class AnswerSerializer(serializers.ModelSerializer):
     responder = serializers.SlugRelatedField(read_only=True, slug_field='username')
     question  = serializers.SlugRelatedField(read_only=True, slug_field='title')
+    accepted  = serializers.BooleanField(read_only=True)
     
     class Meta:
         model = Answer
         fields = ('__all__')
+        
 
 class QuestionSerializer(serializers.ModelSerializer):
     creator        = serializers.SlugRelatedField(read_only=True, slug_field="username")
@@ -29,7 +31,15 @@ class MyListSerializer(serializers.ModelSerializer):
         fields  = ['pk','user','question',]
 
 
+class AnswerDetailSerializer(serializers.ModelSerializer):
+    responder = serializers.SlugRelatedField(read_only=True, slug_field='username')
+    question  = serializers.SlugRelatedField(read_only=True, slug_field='title')
+    accepted  = serializers.BooleanField(read_only=True)
 
+    class Meta:
+        model = Answer
+        fields = ('__all__')
+        
 
 
 class AnswerAcceptSerializer(serializers.ModelSerializer):
