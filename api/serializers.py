@@ -16,7 +16,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     # answers     = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model  = Question
-        fields = ['id','title','body','creator','created_at','answers','total_answers','modified_on','favorite_count',]
+        fields = ['id','title','body','creator','created_at','total_answers','modified_on','favorite_count',]
 
 
 class MyListSerializer(serializers.ModelSerializer):
