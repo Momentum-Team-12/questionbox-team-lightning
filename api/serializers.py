@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import Answer, Question, Favorite
+from .models import Answer, Question, MyList, User
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -19,15 +19,23 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ['id','title','body','creator','created_at','answers','total_answers','modified_on','favorite_count']
 
 
-class QuestionFavoriteSerializer(serializers.ModelSerializer):
+class MyListSerializer(serializers.ModelSerializer):
     user     = serializers.SlugRelatedField(read_only=True,slug_field="username")
     question = serializers.SlugRelatedField(read_only =True, slug_field="title")
 
     
     class Meta:
-        model   = Favorite
+        model   = MyList
         fields  = ['user','question']
 
+
+
+
         
 
         
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('__all__')
