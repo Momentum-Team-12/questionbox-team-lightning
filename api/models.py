@@ -37,8 +37,8 @@ class Answer(models.Model):
 
 
 class MyList(models.Model):
-    question    = models.ForeignKey('Question', related_name='my_lists',on_delete=models.CASCADE)
-    user        = models.ForeignKey('User', related_name= 'my_lists', on_delete=models.CASCADE)
+    question    = models.ForeignKey('Question', related_name='my_lists',on_delete=models.CASCADE, null=True, blank=True)
+    user        = models.ForeignKey('User', related_name= 'my_lists', on_delete=models.CASCADE, null=True,blank=True)
     
     class Meta:
             constraints  = [

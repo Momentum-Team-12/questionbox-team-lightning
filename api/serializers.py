@@ -26,7 +26,7 @@ class MyListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model   = MyList
-        fields  = ['user','question',]
+        fields  = ['pk','user','question',]
 
 
 
