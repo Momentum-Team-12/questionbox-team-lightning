@@ -5,11 +5,11 @@ from api import views as api_views
 
 
 router = routers.DefaultRouter()
-router.register('questions',QuestionViewSet)
-router.register('users',UserViewSet,basename='users')
+router.register('questions',api_views.QuestionViewSet)
+router.register('users',api_views.UserViewSet,basename='users')
 users_router = routers.NestedSimpleRouter(router,'users', lookup='user')
 users_router.register(
     'mylist',
-    MyListView,
+    api_views.MyListView,
     basename='my_list',
 )

@@ -39,7 +39,7 @@ class Answer(models.Model):
 class MyList(models.Model):
     question    = models.ForeignKey('Question', related_name='my_lists',on_delete=models.CASCADE)
     user        = models.ForeignKey('User', related_name= 'my_lists', on_delete=models.CASCADE)
-
+    
     class Meta:
             constraints  = [
                 models.UniqueConstraint(fields =['question','user'], name='my_list')

@@ -149,8 +149,11 @@ class CreateFavoriteView(APIView):
 
 class MyListView(ModelViewSet):
     queryset          = MyList.objects.all()
-    serializer_class  = QuestionSerializer
+    serializer_class  = MyListSerializer
     permission_classes = [IsUserOrReadOnly]
+
+    def get_queryset(self):
+        return MyList.objects.filter(user_id=self.kwargs["user_pk"])
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.user:

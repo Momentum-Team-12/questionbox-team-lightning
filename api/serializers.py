@@ -22,11 +22,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 class MyListSerializer(serializers.ModelSerializer):
     user     = serializers.SlugRelatedField(read_only=True,slug_field="username")
     question = serializers.SlugRelatedField(read_only =True, slug_field="title")
-
+    
     
     class Meta:
         model   = MyList
-        fields  = ['user','question']
+        fields  = ['user','question',]
 
 
 
