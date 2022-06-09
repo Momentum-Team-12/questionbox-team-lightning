@@ -1,5 +1,5 @@
 from api.models import MyList, Question, Answer, MyList, User
-from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer,AnswerAcceptSerializer
+from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer,AnswerAcceptSerializer, AnswerDetailSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
@@ -87,8 +87,8 @@ class AnswerListCreateView(ListCreateAPIView):
 
 class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    # permission_classes = [IsResponderOrReadOnly]
+    serializer_class = AnswerDetailSerializer
+    permission_classes = [IsResponderOrReadOnly]
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
@@ -97,10 +97,7 @@ class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
 class AnswerAcceptView(RetrieveUpdateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerAcceptSerializer
-    # permission_classes = [IsCreatorOrReadOnly]
-
-    def get_queryset(self):
-        return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
+    permission_classes = [IsCreatorOrReadOnly]
 
 
 class UserAnswerListView(ListAPIView):
