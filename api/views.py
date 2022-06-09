@@ -88,7 +88,7 @@ class AnswerListCreateView(ListCreateAPIView):
 class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
-    permission_classes = [IsResponderOrReadOnly]
+    # permission_classes = [IsResponderOrReadOnly]
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
@@ -97,15 +97,10 @@ class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
 class AnswerAcceptView(RetrieveUpdateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerAcceptSerializer
-    permission_classes = [IsCreatorOrReadOnly]
+    # permission_classes = [IsCreatorOrReadOnly]
 
     def get_queryset(self):
         return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
-
-# # CDRF?
-#     def partial_update(self, request, *args, **kwargs):
-#         kwargs['partial'] = True
-#         return self.update(request, *args, **kwargs)
 
 
 class UserAnswerListView(ListAPIView):
