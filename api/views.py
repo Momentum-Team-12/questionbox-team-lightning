@@ -1,5 +1,5 @@
 from api.models import MyList, Question, Answer, MyList, User
-from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer
+from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
@@ -142,7 +142,7 @@ class CreateFavoriteView(APIView):
         user     = self.request.user
         question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
         user.favorite_questions.add(question)
-        serializer = QuestionSerializer(QuestionSerializer, context={"request": request})
+        serializer = QuestionDetailSerializer(QuestionDetailSerializer, context={"request": request})
         return Response(serializer.data, status=201)
 
 
