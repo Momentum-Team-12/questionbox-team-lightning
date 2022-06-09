@@ -1,8 +1,8 @@
 from api.models import Question, Answer, Favorite
-from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer
+from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer, AnswerAcceptSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView, get_object_or_404
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticatedOrReadOnly, IsAuthenticated
 from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -59,15 +59,15 @@ class QuestionViewSet(ModelViewSet):
 
 
 class AnswerListCreateView(ListCreateAPIView):
+    queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
-
 
     def get_queryset(self):
         return Answer.objects.filter(question_id=self.kwargs["question_pk"])
 
     def perform_create(self, serializer, **kwargs):
-        question = get_object_or_404(Answer, pk=self.kwargs["question_pk"])
-        serializer.save(answered_by=self.request.user, question=question)
+        question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
+        serializer.save(responder=self.request.user, question=question)
 
     # @action(detail=False)
     # def accepted(self, request):
@@ -96,29 +96,20 @@ class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
         serializer.save(user=self.request.user)
 
 
-# class AnswerAcceptView(RetrieveUpdateAPIView):
-#     permission_classes = [IsAuthenticated]
+class AnswerAcceptView(RetrieveUpdateAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerAcceptSerializer
+    # permission_classes = [IsCreatorOrReadOnly]
 
-    # def get_queryset(self):
-    #     return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
+    def get_queryset(self):
+        return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
 
-# CDRF?
-    # def partial_update(self, request, *args, **kwargs):
-    #     kwargs['partial'] = True
-    #     return self.update(request, *args, **kwargs)
+# # CDRF?
+#     def partial_update(self, request, *args, **kwargs):
+#         kwargs['partial'] = True
+#         return self.update(request, *args, **kwargs)
 
-    # def UpdateAcceptedValue(request, accepted_id):
-    #     if request.method == 'PATCH':
-    #         try:
-    #             answer = Answer.objects.get(pk=accepted_id)
-    #             answer.accepted = True
-    #             answer.save()
-    #             return HttpResponse('', status=200)
-    #         except Exception:
-    #             return HttpResponse('Internal Error', status=500)
-    #     return HttpResponse('Method not allowed', status=405)
 
-    
 class UserAnswerListView(ListAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer

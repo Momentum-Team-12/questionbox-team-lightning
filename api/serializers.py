@@ -28,6 +28,10 @@ class QuestionFavoriteSerializer(serializers.ModelSerializer):
         model   = Favorite
         fields  = ['user','question']
 
-        
 
-        
+class AnswerAcceptSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Answer
+        fields = ['accepted']
+        read_only_fields = ['response', 'responder', 'question', 'id' ]
