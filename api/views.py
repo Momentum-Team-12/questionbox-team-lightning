@@ -1,12 +1,10 @@
-from api.models import Question, Answer, Favorite
-from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer, AnswerAcceptSerializer
+from api.models import MyList, Question, Answer, MyList, User
+from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer,AnswerAcceptSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView, get_object_or_404
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticatedOrReadOnly, IsAuthenticated
-from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly
-from rest_framework.decorators import action
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly, IsUserOrReadOnly
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from django.db.models import Count
 from rest_framework.views import APIView
 
@@ -121,14 +119,6 @@ class UserQuestionListView(ListAPIView):
         return Question.objects.filter(creator_id=self.kwargs["creator_pk"])
 
 
-class UserFavoriteListView(ListAPIView):
-    queryset = Favorite.objects.all()
-    serializer_class = QuestionFavoriteSerializer
-    
-    def get_queryset(self):
-        return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
-
-
 class CreateFavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -137,5 +127,34 @@ class CreateFavoriteView(APIView):
         user     = self.request.user
         question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
         user.favorite_questions.add(question)
-        serializer = QuestionSerializer(QuestionSerializer, context={"request": request})
+        serializer = QuestionDetailSerializer(QuestionDetailSerializer, context={"request": request})
         return Response(serializer.data, status=201)
+
+
+
+class MyListView(ModelViewSet):
+    queryset          = MyList.objects.all()
+    serializer_class  = MyListSerializer
+    permission_classes = [IsUserOrReadOnly]
+
+    def get_queryset(self):
+        return MyList.objects.filter(user_id=self.kwargs["user_pk"])
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.user:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.user:
+            serializer.save()
+
+
+    # def perform_update(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+
+
+class UserViewSet(ModelViewSet):
+    queryset            = User.objects.all()
+    serializer_class    = UserSerializer
+
