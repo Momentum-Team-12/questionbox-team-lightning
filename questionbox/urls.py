@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.router import router
+from api.router import router, users_router
 from api import views as api_views
 
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
+    path('api/', include(users_router.urls)),
     path(
         "api/questions/<int:question_pk>/answers",
         api_views.AnswerListCreateView.as_view(),
@@ -34,6 +35,6 @@ urlpatterns = [
     path("api/questions/<int:question_pk>/answers/<int:pk>/accept", api_views.AnswerAcceptView.as_view(), name="accept_answer"),
     path('api/user/<int:creator_pk>/questions', api_views.UserQuestionListView.as_view(), name="user_questions"),
     path('api/user/<int:responder_pk>/answers', api_views.UserAnswerListView.as_view(), name="user_answers"),
-    path('api/user/<int:user_pk>/favorites', api_views.UserFavoriteListView.as_view(), name="user_favorites"),
-    path('api/questions/<int:question_pk>/favorites', api_views.CreateFavoriteView.as_view(), name ="create_favorites")
+    path('api/questions/<int:question_pk>/favorites', api_views.CreateFavoriteView.as_view(), name ="create_favorites"),
 ]
+
