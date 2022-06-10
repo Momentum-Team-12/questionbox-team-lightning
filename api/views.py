@@ -61,7 +61,12 @@ class AnswerListCreateView(ListCreateAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
-        return Answer.objects.filter(question_id=self.kwargs["question_pk"])
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            results = Answer.objects.filter(response__icontains=self.request.query_params.get("search"))
+        else:
+            results = Answer.objects.filter(question_id=self.kwargs["question_pk"])
+        return results
 
     def perform_create(self, serializer, **kwargs):
         question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
@@ -73,15 +78,6 @@ class AnswerListCreateView(ListCreateAPIView):
     #     serializer = self.get_serializer(accepted_answer, many=True)
     #     return Response(serializer.data)
 
-    # def get_queryset(self):
-    #     search_term = self.request.query_params.get("search")
-    #     if search_term is not None:
-    #         results = Answer.objects.filter(response__icontains=self.request.query_params.get("search"))
-    #     else:
-    #         results = Answer.objects.annotate(
-    #             total_answers=Count('response')
-    #         )
-    #     return results
 
 
 
