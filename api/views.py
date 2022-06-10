@@ -1,12 +1,10 @@
-from api.models import Question, Answer, Favorite
-from api.serializers import QuestionFavoriteSerializer, QuestionSerializer,AnswerSerializer,QuestionFavoriteSerializer
+from api.models import MyList, Question, Answer, MyList, User
+from api.serializers import MyListSerializer, QuestionSerializer,AnswerSerializer, UserSerializer,QuestionDetailSerializer,AnswerAcceptSerializer, AnswerDetailSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import  ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
-from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly
-from rest_framework.decorators import action
+from .permissions import IsResponderOrReadOnly, IsCreatorOrReadOnly, IsUserOrReadOnly
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from django.db.models import Count
 from rest_framework.views import APIView
 
@@ -59,11 +57,9 @@ class QuestionViewSet(ModelViewSet):
 
 
 class AnswerListCreateView(ListCreateAPIView):
+    queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
 
-
-    # def get_queryset(self):
-    #     return Answer.objects.filter(question_id=self.kwargs["question_pk"])
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
@@ -73,8 +69,8 @@ class AnswerListCreateView(ListCreateAPIView):
         return results
 
     def perform_create(self, serializer, **kwargs):
-        question = get_object_or_404(Answer, pk=self.kwargs["question_pk"])
-        serializer.save(answered_by=self.request.user, question=question)
+        question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
+        serializer.save(responder=self.request.user, question=question)
 
     # @action(detail=False)
     # def accepted(self, request):
@@ -87,36 +83,19 @@ class AnswerListCreateView(ListCreateAPIView):
 
 class AnswerDetailEditView(RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
+    serializer_class = AnswerDetailSerializer
     permission_classes = [IsResponderOrReadOnly]
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
 
-# class AnswerAcceptView(RetrieveUpdateAPIView):
-#     permission_classes = [IsAuthenticated]
+class AnswerAcceptView(RetrieveUpdateAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerAcceptSerializer
+    permission_classes = [IsCreatorOrReadOnly]
 
-    # def get_queryset(self):
-    #     return Answer.objects.filter(question_id=self.kwargs["question_pk"], id=self.kwargs["pk"])
 
-# CDRF?
-    # def partial_update(self, request, *args, **kwargs):
-    #     kwargs['partial'] = True
-    #     return self.update(request, *args, **kwargs)
-
-    # def UpdateAcceptedValue(request, accepted_id):
-    #     if request.method == 'PATCH':
-    #         try:
-    #             answer = Answer.objects.get(pk=accepted_id)
-    #             answer.accepted = True
-    #             answer.save()
-    #             return HttpResponse('', status=200)
-    #         except Exception:
-    #             return HttpResponse('Internal Error', status=500)
-    #     return HttpResponse('Method not allowed', status=405)
-
-    
 class UserAnswerListView(ListAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
@@ -133,14 +112,6 @@ class UserQuestionListView(ListAPIView):
         return Question.objects.filter(creator_id=self.kwargs["creator_pk"])
 
 
-class UserFavoriteListView(ListAPIView):
-    queryset = Favorite.objects.all()
-    serializer_class = QuestionFavoriteSerializer
-    
-    def get_queryset(self):
-        return Favorite.objects.filter(user_id=self.kwargs["user_pk"])
-
-
 class CreateFavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -149,5 +120,34 @@ class CreateFavoriteView(APIView):
         user     = self.request.user
         question = get_object_or_404(Question, pk=self.kwargs["question_pk"])
         user.favorite_questions.add(question)
-        serializer = QuestionSerializer(QuestionSerializer, context={"request": request})
+        serializer = QuestionDetailSerializer(QuestionDetailSerializer, context={"request": request})
         return Response(serializer.data, status=201)
+
+
+
+class MyListView(ModelViewSet):
+    queryset          = MyList.objects.all()
+    serializer_class  = MyListSerializer
+    permission_classes = [IsUserOrReadOnly]
+
+    def get_queryset(self):
+        return MyList.objects.filter(user_id=self.kwargs["user_pk"])
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.user:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.user:
+            serializer.save()
+
+
+    # def perform_update(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+
+
+class UserViewSet(ModelViewSet):
+    queryset            = User.objects.all()
+    serializer_class    = UserSerializer
+

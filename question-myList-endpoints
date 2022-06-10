@@ -1,0 +1,136 @@
+#Questions, favorites and My List Endpoints
+
+## Authenticated Users - create and edit questions, add questions to MY List and create favorites
+
+### Request
+
+```json
+GET api/questions
+
+## get a list of all questions
+
+POST api/questions/
+
+"id": 5,
+	"title": "title"
+	"body": "body"
+	"creator": "user1"
+	"created_at": "2022-06-09T19:49:25.448295Z",
+	"modified_on": "2022-06-09T19:49:25.448316Z",
+	"favorite_count": 0
+
+
+```json
+201 Created
+
+
+
+## Get a list of answers associated with a specific question, accessible to unauthenticated users
+
+### Request
+
+```
+GET api/questions/<int:question_pk>
+```
+View a specific question
+### Response
+
+```json
+200 OK
+
+{
+ {
+	"id": 3,
+	"title": "Question C",
+	"body": "Body Question C",
+	"creator": "user3",
+	"created_at": "2022-06-09T00:42:50.005323Z",
+	"total_answers": 0,
+	"modified_on": "2022-06-09T00:42:50.005338Z",
+	"favorite_count": 1
+}
+}
+```
+
+## View specific answer for a question
+
+### Request
+
+```
+PATCH api/questions/<int:question_pk>/
+```
+Update any part of question (should only be allowed by the creator of the question)
+### Response
+
+```json
+200 OK
+
+{
+	"id": 3,
+	"title": "Question C",
+	"body": "Body Question C",
+	"creator": "user3",
+	"created_at": "2022-06-09T00:42:50.005323Z",
+	"total_answers": 0,
+	"modified_on": "2022-06-09T00:42:50.005338Z",
+	"favorite_count": 1
+}
+```
+
+
+### Request
+
+```json
+DELETE api/questions/<int:question_pk>
+
+
+```
+
+### Response
+
+```json
+204 NO CONTENT
+
+
+
+### Request
+GET api/users/<user_pk>/mylist
+
+Shows a list all questions added to the specific users mylist.
+```json 200 OK
+[
+	{
+		"pk": 1,
+		"user": "user3",
+		"question": "Question B"
+	},
+	{
+		"pk": 2,
+		"user": "user3",
+		"question": "Question C"
+	},
+	{
+		"pk": 5,
+		"user": "user3",
+		"question": "Question D"
+	}
+]
+
+### Request
+
+```json 201 created
+POST/PATCH api/users/<user_pk>/mylist/
+{
+	"pk": 23,
+	"user": "user1"
+	"question": "Question A"
+}
+```
+### Request
+POST /api/questions/5/favorites
+```json 201 created
+{
+	"title": "question title"
+	"body": "question body"
+}
+
