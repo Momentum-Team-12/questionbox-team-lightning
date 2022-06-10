@@ -8,6 +8,7 @@
 POST api/questions/<int:question_pk>/answers
 
 {
+
     "response": "placeholder text, place response within quotes"
 }
 ```
@@ -179,4 +180,27 @@ GET api/user/<int:responder_pk>/answers
 	"created_at": "2022-06-09T19:25:28.473378Z",
 	"modified_on": "2022-06-09T19:25:28.473414Z"
 }
+```
+
+## Allow a question creator to select an answer as accepted, default value is set to false.
+
+### Request
+
+```json
+POST /api/questions/<int:question_pk>/answers/<int:pk>/accept
+
+{
+    "accepted": true
+}
+```
+
+### Response
+
+```json
+200 OK
+
+{
+  "accepted": true,
+},
+
 ```
